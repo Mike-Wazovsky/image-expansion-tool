@@ -12,7 +12,7 @@ filename = "dataset.zip"
 def download_data():
     subprocess.run(["chmod", "+x", "./src/data/download_data.sh"])
     subprocess.run(["./src/data/download_data.sh"])
-    subprocess.run(["tar", "cvfz", "./data/raw/train_dataset.zip", "./data/processed/train_dataset.zip"])
+    subprocess.run(["tar", "cvfz", "./data/raw/train_dataset.zip", "./data/processed/"])
 
 
 @click.command()
