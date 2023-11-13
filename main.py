@@ -1,7 +1,7 @@
 from src.data import get_dataset
 from src.models.train_model import train_model
 
-batch_size = 32
+batch_size = 16
 
 
 def main():
