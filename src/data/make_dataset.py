@@ -10,7 +10,7 @@ filename = "dataset.zip"
 
 
 def download_data():
-    subprocess.run(["./src/data/download_data.sh"])
+    subprocess.run(["sudo", "./src/data/download_data.sh"])
 
 
 @click.command()
