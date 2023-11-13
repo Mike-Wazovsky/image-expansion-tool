@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import pytorch_lightning as pl
 
+from lightning.pytorch.loggers import CSVLogger
+
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
