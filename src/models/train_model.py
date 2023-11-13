@@ -136,4 +136,4 @@ if __name__ == '__main__':
     model = UpscalerModule(Upscaler(), nn.MSELoss())
 
     trainer = pl.Trainer()
-    trainer.fit(model=model, train_dataloaders=train_loader, logger=CSVLogger(save_dir="logs/"))
+    trainer.fit(model=model, train_dataloaders=train_loader)
