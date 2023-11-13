@@ -2,7 +2,16 @@
 import click
 import logging
 from pathlib import Path
-from dotenv import find_dotenv, load_dotenv
+# from dotenv import find_dotenv, load_dotenv
+import subprocess
+
+link_to_dataset = "http://www.example.com/songs/mp3.mp3"
+filename = "dataset.zip"
+
+
+def download_data():
+    subprocess.run(
+        """wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1mOEP6woH_9Ox8_Va0V5DibWttYR6u930' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1mOEP6woH_9Ox8_Va0V5DibWttYR6u930" -O train_dataset.zip && rm -rf /tmp/cookies.txt""")
 
 
 @click.command()
@@ -25,6 +34,6 @@ if __name__ == '__main__':
 
     # find .env automagically by walking up directories until it's found, then
     # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
+    # load_dotenv(find_dotenv())
 
-    main()
+    download_data()
