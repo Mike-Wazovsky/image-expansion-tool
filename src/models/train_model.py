@@ -135,5 +135,5 @@ class UpscalerModule(pl.LightningModule):
 if __name__ == '__main__':
     model = UpscalerModule(Upscaler(), nn.MSELoss())
 
-    trainer = pl.Trainer()
+    trainer = pl.Trainer(accelerator="gpu", devices=1)
     trainer.fit(model=model, train_dataloaders=train_loader)
