@@ -1,18 +1,16 @@
-import torch
-import torch.nn as nn
 import pytorch_lightning as pl
 
 from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 
-from .upscaler_v1 import Upscaler
 
 class UpscalerModule(pl.LightningModule):
-    def __init__(self, model, loss, lr=0.005):
+    def __init__(self, model, loss, lr, optimizer_type):
         super().__init__()
         self.model = model
         self.lpips = LearnedPerceptualImagePatchSimilarity(net_type='squeeze')
         self.loss = loss
         self.lr = lr
+        self.optimizer_type = optimizer_type
 
     def forward(self, x):
         logits = self.model(x)
@@ -38,13 +36,12 @@ class UpscalerModule(pl.LightningModule):
         self.log("valid_metric", metric_value, on_epoch=True)
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
+        optimizer = self.optimizer_type(self.parameters(), lr=self.lr)
         return optimizer
 
 
-def train_model(train_loader):
-    model_version = Upscaler()
-    model = UpscalerModule(model_version, nn.MSELoss())
+def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005):
+    model = UpscalerModule(model_version, loss, lr, optimizer_type)
 
-    trainer = pl.Trainer(accelerator="gpu", devices=1)
+    trainer = pl.Trainer(accelerator=accelerator, devices=devices)
     trainer.fit(model=model, train_dataloaders=train_loader)

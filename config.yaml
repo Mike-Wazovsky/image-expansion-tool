@@ -1,0 +1,18 @@
+model:
+  version: upscaler_v1
+
+dataset:
+  version: seagull_dataset
+
+learning:
+  epoch_amount: 200
+  batch_size: 16
+  loss: mse
+  lr: 0.005
+  scheduler: None
+  optimizer_type: Adam
+
+server:
+  accelerator:
+    type: gpu
+    devices: 1

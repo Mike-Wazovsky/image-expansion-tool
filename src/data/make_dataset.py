@@ -10,13 +10,13 @@ from PIL.Image import Resampling
 import numpy as np
 
 
-def download_data():
+def download_and_process_data():
     subprocess.run(["chmod", "+x", "./src/data/download_data.sh"])
     subprocess.run(["./src/data/download_data.sh"])
     subprocess.run(["unzip", "./data/raw/dataset.zip", "-d", "./data/processed/"])
 
 
-class UpscalerDataset(Dataset):
+class SeagullDataset(Dataset):
     def __init__(self, path):
         self.filenames = []
         self.root = path
@@ -49,16 +49,9 @@ class UpscalerDataset(Dataset):
         return X, Y
 
 
-def get_dataset(batch_size=8):
-    download_data()
-
-    train_dataset = UpscalerDataset("./data/processed/train/train/images/")
+def get_dataset(train_dataset, val_dataset, test_dataset, batch_size=8):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-
-    valid_dataset = UpscalerDataset("./data/processed/train/valid/images/")
-    valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=True)
-
-    test_dataset = UpscalerDataset("./data/processed/test/images/")
+    valid_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
     return [train_loader, valid_loader, test_loader]
