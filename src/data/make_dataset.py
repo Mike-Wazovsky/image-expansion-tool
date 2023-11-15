@@ -12,10 +12,22 @@ import numpy as np
 import os, shutil
 
 
+def remove_directory_content(directory):
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+
 def download_and_process_data():
     if len(os.listdir("./data/raw")) != 0:
-        shutil.rmtree("./data/raw")
-        shutil.rmtree("./data/processed/")
+        remove_directory_content("./data/raw")
+        remove_directory_content("./data/processed/")
 
     subprocess.run(["chmod", "+x", "./src/data/download_data.sh"])
     subprocess.run(["./src/data/download_data.sh"])
