@@ -40,8 +40,8 @@ class UpscalerModule(pl.LightningModule):
         return optimizer
 
 
-def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005):
+def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000):
     model = UpscalerModule(model_version, loss, lr, optimizer_type)
 
-    trainer = pl.Trainer(accelerator=accelerator, devices=devices)
+    trainer = pl.Trainer(accelerator=accelerator, devices=devices, max_epochs=max_epochs)
     trainer.fit(model=model, train_dataloaders=train_loader)

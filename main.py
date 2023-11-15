@@ -21,7 +21,7 @@ def main(cfg: DictConfig):
         raise Exception("No correct value for model.version in config is declared")
 
     if cfg.dataset.version == "seagull_dataset":
-        download_and_process_data()
+        download_and_process_data("./src/data/download_seagull_data.sh")
 
         train_dataset = SeagullDataset("./data/processed/train/train/images/")
         val_dataset = SeagullDataset("./data/processed/train/valid/images/")
@@ -45,9 +45,9 @@ def main(cfg: DictConfig):
     train_loader, valid_loader, test_loader = get_dataset(train_dataset=train_dataset, val_dataset=val_dataset,
                                                           test_dataset=test_dataset, batch_size=cfg.learning.batch_size)
 
-    train_model(model_version=model_version, train_loader=train_loader, loss=loss, lr=0.005,
+    train_model(model_version=model_version, train_loader=train_loader, loss=loss, lr=cfg.learning.lr,
                 optimizer_type=optimizer_type, accelerator=accelerator,
-                devices=devices)
+                devices=devices, max_epochs=cfg.learning.epoch_amount)
 
 
 if __name__ == "__main__":

@@ -1,15 +1,12 @@
-import subprocess
-from torch.utils.data import Dataset, DataLoader
 import os
-
-import torch
-
-from PIL import Image
-from PIL.Image import Resampling
+import shutil
+import subprocess
 
 import numpy as np
-
-import os, shutil
+import torch
+from PIL import Image
+from PIL.Image import Resampling
+from torch.utils.data import Dataset, DataLoader
 
 
 def remove_directory_content(directory):
@@ -24,13 +21,13 @@ def remove_directory_content(directory):
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 
-def download_and_process_data():
+def download_and_process_data(path_to_download_script):
     if os.path.isdir("./data/raw") and len(os.listdir("./data/raw")) != 0:
         remove_directory_content("./data/raw")
         remove_directory_content("./data/processed/")
 
-    subprocess.run(["chmod", "+x", "./src/data/download_data.sh"])
-    subprocess.run(["./src/data/download_data.sh"])
+    subprocess.run(["chmod", "+x", path_to_download_script])
+    subprocess.run([path_to_download_script])
     subprocess.run(["unzip", "./data/raw/dataset.zip", "-d", "./data/processed/"])
 
 
