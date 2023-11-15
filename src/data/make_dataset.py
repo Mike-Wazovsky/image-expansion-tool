@@ -9,13 +9,13 @@ from PIL.Image import Resampling
 
 import numpy as np
 
-import os
+import os, shutil
 
 
 def download_and_process_data():
     if len(os.listdir("./data/raw")) != 0:
-        os.remove("./data/raw")
-        os.remove("./data/processed/")
+        shutil.rmtree("./data/raw")
+        shutil.rmtree("./data/processed/")
 
     subprocess.run(["chmod", "+x", "./src/data/download_data.sh"])
     subprocess.run(["./src/data/download_data.sh"])
