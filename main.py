@@ -36,6 +36,8 @@ def main(cfg: DictConfig):
 
     if cfg.learning.optimizer_type == "Adam":
         optimizer_type = torch.optim.Adam
+    elif cfg.learning.optimizer_type == "SGD":
+        optimizer_type = torch.optim.SGD
     else:
         raise Exception("No correct value for learning.optimizer_type in config is declared")
 
