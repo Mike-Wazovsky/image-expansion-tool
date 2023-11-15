@@ -47,7 +47,7 @@ def main(cfg: DictConfig):
 
     train_model(model_version=model_version, train_loader=train_loader, loss=loss, lr=cfg.learning.lr,
                 optimizer_type=optimizer_type, accelerator=accelerator,
-                devices=devices, max_epochs=cfg.learning.epoch_amount)
+                devices=devices, max_epochs=cfg.learning.epoch_amount, log_every_n_steps=cfg.learning.log_every_n_steps)
 
 
 if __name__ == "__main__":
