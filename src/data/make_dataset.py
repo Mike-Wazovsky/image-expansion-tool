@@ -9,8 +9,14 @@ from PIL.Image import Resampling
 
 import numpy as np
 
+import os
+
 
 def download_and_process_data():
+    if len(os.listdir("./data/raw")) != 0:
+        os.remove("./data/raw")
+        os.remove("./data/processed/")
+
     subprocess.run(["chmod", "+x", "./src/data/download_data.sh"])
     subprocess.run(["./src/data/download_data.sh"])
     subprocess.run(["unzip", "./data/raw/dataset.zip", "-d", "./data/processed/"])
