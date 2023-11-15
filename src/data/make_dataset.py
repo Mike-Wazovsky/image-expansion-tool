@@ -25,7 +25,7 @@ def remove_directory_content(directory):
 
 
 def download_and_process_data():
-    if len(os.listdir("./data/raw")) != 0:
+    if os.path.isdir("./data/raw") and len(os.listdir("./data/raw")) != 0:
         remove_directory_content("./data/raw")
         remove_directory_content("./data/processed/")
 
