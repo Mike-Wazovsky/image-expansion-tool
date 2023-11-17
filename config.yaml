@@ -1,5 +1,5 @@
 model:
-  version: upscaler_v1
+  version: upscaler_v2
 
 dataset:
   version: seagull_dataset
