@@ -11,6 +11,7 @@ class UpscalerModule(pl.LightningModule):
         self.loss = loss
         self.lr = lr
         self.optimizer_type = optimizer_type
+        self.save_hyperparameters()
 
     def forward(self, x):
         logits = self.model(x)
@@ -45,5 +46,5 @@ def train_model(model_version, train_loader, loss, optimizer_type, accelerator, 
     model = UpscalerModule(model_version, loss, lr, optimizer_type)
 
     trainer = pl.Trainer(accelerator=accelerator, devices=devices, max_epochs=max_epochs,
-                         log_every_n_steps=log_every_n_steps)
+                         log_every_n_steps=log_every_n_steps, default_root_dir="./models/")
     trainer.fit(model=model, train_dataloaders=train_loader)

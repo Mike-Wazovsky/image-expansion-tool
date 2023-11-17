@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 
-class Upscaler(nn.Module):
+class UpscalerV1(nn.Module):
     def __init__(self):
         super().__init__()
 

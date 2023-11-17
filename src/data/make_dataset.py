@@ -1,12 +1,12 @@
 import os
 import shutil
 import subprocess
+import random
 
-import numpy as np
-import torch
 from PIL import Image
-from PIL.Image import Resampling
 from torch.utils.data import Dataset, DataLoader
+
+from torchvision import transforms
 
 
 def remove_directory_content(directory):
@@ -32,12 +32,13 @@ def download_and_process_data(path_to_download_script):
 
 
 class SeagullDataset(Dataset):
-    def __init__(self, path):
+    def __init__(self, path, transformations):
         self.filenames = []
         self.root = path
+        self.transforms = transformations
         for (_, _, files) in os.walk(path):
             for file in files:
-                # TODO: Добавить аугментаций
+                # TODO: Проверять, чтобы картинка была более 512x512 px
                 self.filenames.append(file)
             break
 
@@ -48,23 +49,20 @@ class SeagullDataset(Dataset):
         filename = self.filenames[idx]
         image = Image.open(self.root + filename)
 
-        image_width = image.size[0]
-        image_height = image.size[1]
-        image_preprocess = lambda lenght: lenght if lenght % 2 == 0 else lenght - 1
+        Y_transformed = self.transforms(image)
+        resizing_options = [transforms.InterpolationMode.NEAREST,
+                            transforms.InterpolationMode.NEAREST_EXACT,
+                            transforms.InterpolationMode.BILINEAR,
+                            transforms.InterpolationMode.BICUBIC]
 
-        image_preprocessed = image.crop((0, 0, image_preprocess(image_width), image_preprocess(image_height)))
+        X_transformed = transforms.functional.resize(img=Y_transformed,
+                                                     size=Y_transformed.shape[1] // 2,
+                                                     interpolation=random.choice(resizing_options))
 
-        image_rescaled = image_preprocessed.copy()
-        image_rescaled.thumbnail((image_rescaled.size[0] // 2, image_rescaled.size[1] // 2),
-                                 resample=Resampling.BICUBIC)
-
-        X = torch.tensor(np.array(image_rescaled, dtype=np.float32)).transpose(1, 2).transpose(0, 1)
-        Y = torch.tensor(np.array(image_preprocessed, dtype=np.float32)).transpose(1, 2).transpose(0, 1)
-
-        return X, Y
+        return X_transformed, Y_transformed
 
 
-def get_dataset(train_dataset, val_dataset, test_dataset, batch_size=8):
+def get_dataloaders(train_dataset, val_dataset, test_dataset, batch_size=8):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     valid_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
