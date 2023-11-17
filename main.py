@@ -7,6 +7,7 @@ from src.data import get_dataloaders
 from src.data import download_and_process_data
 
 from src.data import SeagullDataset
+from src.data.data_transforms import data_transforms
 
 from src.models.train_model import train_model
 
@@ -26,9 +27,9 @@ def main(cfg: DictConfig):
     if cfg.dataset.version == "seagull_dataset":
         download_and_process_data("./src/data/download_seagull_data.sh")
 
-        train_dataset = SeagullDataset("./data/processed/train/train/images/")
-        val_dataset = SeagullDataset("./data/processed/train/valid/images/")
-        test_dataset = SeagullDataset("./data/processed/test/images/")
+        train_dataset = SeagullDataset("./data/processed/train/train/images/", data_transforms)
+        val_dataset = SeagullDataset("./data/processed/train/valid/images/", data_transforms)
+        test_dataset = SeagullDataset("./data/processed/test/images/", data_transforms)
     else:
         raise Exception("No correct value for dataset.version in config is declared")
 
