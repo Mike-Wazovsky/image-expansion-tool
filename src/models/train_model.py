@@ -15,7 +15,7 @@ def save_model(epoch, model, optimizer):
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict()
     },
-        "model_{}_v{}_{}.ckpt"
+        "./models/model_{}_v{}_{}.ckpt"
         .format(
             epoch,
             common_dict_counter[epoch],
@@ -51,7 +51,7 @@ class UpscalerModule(pl.LightningModule):
         return loss_value
 
     def on_train_epoch_end(self):
-        save_model(self.current_epoch, self.model, self.optimizer_type)
+        save_model(self.current_epoch, self.model, self.optimizer)
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
