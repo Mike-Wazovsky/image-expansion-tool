@@ -1,6 +1,27 @@
 import pytorch_lightning as pl
+import torch
 
 from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
+from datetime import datetime
+
+common_dict_counter = {}
+
+
+def save_model(epoch, model, optimizer):
+    common_dict_counter[epoch] = common_dict_counter.get(epoch, -1) + 1
+
+    torch.save({
+        'epoch': epoch,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict()
+    },
+        "model_{}_v{}_{}.ckpt"
+        .format(
+            epoch,
+            common_dict_counter[epoch],
+            datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
+        )
+    )
 
 
 class UpscalerModule(pl.LightningModule):
@@ -28,6 +49,9 @@ class UpscalerModule(pl.LightningModule):
         self.log("train_metric", metric_value, on_epoch=True)
 
         return loss_value
+
+    def on_train_epoch_end(self):
+        save_model(self.current_epoch, self.model, self.optimizer_type)
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
