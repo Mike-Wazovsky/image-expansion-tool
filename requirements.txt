@@ -1,15 +1,15 @@
 # external requirements
 click
-Sphinx
-coverage
-flake8
+Sphinx==7.2.6
+coverage==7.3.2
+flake8==6.1.0
 python-dotenv>=0.5.1
-torch
-lightning
-torchvision
+torch==2.0.1
+lightning==2.1.2
+torchvision==0.15.2
 numpy
-pillow
+pillow==9.4.0
 matplotlib
 tqdm
-torchmetrics
-hydra-core
+torchmetrics==1.2.0
+hydra-core==1.3.2
