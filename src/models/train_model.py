@@ -13,7 +13,7 @@ def save_model(epoch, model, optimizer):
     torch.save({
         'epoch': epoch,
         'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict()
+        'optimizer_state_dict': optimizer.state_dict() if optimizer is not None else None
     },
         "./models/model_{}_v{}_{}.ckpt"
         .format(
@@ -32,6 +32,7 @@ class UpscalerModule(pl.LightningModule):
         self.loss = loss
         self.lr = lr
         self.optimizer_type = optimizer_type
+        self.optimizer = None # Конкретный оптимизатор
         self.save_hyperparameters()
 
     def forward(self, x):
@@ -61,8 +62,9 @@ class UpscalerModule(pl.LightningModule):
         self.log("valid_metric", metric_value, on_epoch=True)
 
     def configure_optimizers(self):
-        optimizer = self.optimizer_type(self.parameters(), lr=self.lr)
-        return optimizer
+        self.optimizer = self.optimizer_type(self.parameters(), lr=self.lr)
+
+        return self.optimizer
 
 
 def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000,
