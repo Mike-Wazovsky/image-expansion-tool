@@ -31,6 +31,8 @@ class UpscalerV2(nn.Module):
         self.conv_1_1 = self.BlockConv(64, 32)
         self.conv_1_2 = self.BlockConv(32, 3)
 
+        self.sigmoid = nn.Sigmoid()
+
     def forward(self, x):
         x_3x3 = self.block_up_1_3x3(x)
         x_5x5 = self.block_up_1_5x5(x)
@@ -41,4 +43,4 @@ class UpscalerV2(nn.Module):
         x_32x32 = self.conv_1_1(extended)
         output = self.conv_1_2(x_32x32)
 
-        return output
+        return self.sigmoid(output)
