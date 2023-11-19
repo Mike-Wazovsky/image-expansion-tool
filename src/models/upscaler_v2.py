@@ -43,4 +43,4 @@ class UpscalerV2(nn.Module):
         x_32x32 = self.conv_1_1(extended)
         output = self.conv_1_2(x_32x32)
 
-        return self.sigmoid(output)
+        return output

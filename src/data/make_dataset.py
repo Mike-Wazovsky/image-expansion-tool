@@ -57,7 +57,8 @@ class SeagullDataset(Dataset):
 
         X_transformed = transforms.functional.resize(img=Y_transformed,
                                                      size=Y_transformed.shape[1] // 2,
-                                                     interpolation=random.choice(resizing_options))
+                                                     # interpolation=random.choice(resizing_options))
+                                                     interpolation=transforms.InterpolationMode.BILINEAR)
 
         return X_transformed, Y_transformed
 
