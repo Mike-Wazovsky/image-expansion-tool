@@ -60,7 +60,7 @@ class UpscalerModule(pl.LightningModule):
         return optimizer
 
     def on_train_epoch_end(self):
-        save_model(self.current_epoch, self.model, self.optimizer)
+        save_model(self.current_epoch, self.model, None)
 
 
 def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000,
