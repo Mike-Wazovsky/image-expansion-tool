@@ -25,15 +25,12 @@ def save_model(epoch, model, optimizer):
 
 
 class UpscalerModule(pl.LightningModule):
-    def __init__(self, model, loss, lr, optimizer_type):
+    def __init__(self, model, loss, lr=0.005):
         super().__init__()
         self.model = model
         self.lpips = LearnedPerceptualImagePatchSimilarity(net_type='squeeze')
         self.loss = loss
         self.lr = lr
-        self.optimizer_type = optimizer_type
-        self.optimizer = None # Конкретный оптимизатор
-        self.save_hyperparameters()
 
     def forward(self, x):
         logits = self.model(x)
@@ -51,9 +48,6 @@ class UpscalerModule(pl.LightningModule):
 
         return loss_value
 
-    def on_train_epoch_end(self):
-        save_model(self.current_epoch, self.model, self.optimizer)
-
     def validation_step(self, batch, batch_idx):
         x, y = batch
         y_ = self.model(x)
@@ -62,14 +56,16 @@ class UpscalerModule(pl.LightningModule):
         self.log("valid_metric", metric_value, on_epoch=True)
 
     def configure_optimizers(self):
-        self.optimizer = self.optimizer_type(self.parameters(), lr=self.lr)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
+        return optimizer
 
-        return self.optimizer
+    def on_train_epoch_end(self):
+        save_model(self.current_epoch, self.model, self.optimizer)
 
 
 def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000,
                 log_every_n_steps=5):
-    model = UpscalerModule(model_version, loss, lr, optimizer_type)
+    model = UpscalerModule(model_version, loss, lr)
 
     trainer = pl.Trainer(accelerator=accelerator, devices=devices, max_epochs=max_epochs,
                          log_every_n_steps=log_every_n_steps, default_root_dir="./models/")

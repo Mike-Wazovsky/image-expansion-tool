@@ -13,6 +13,7 @@ import torch
 from PIL import Image
 from PIL.Image import Resampling
 
+
 def remove_directory_content(directory):
     for filename in os.listdir(directory):
         file_path = os.path.join(directory, filename)
@@ -36,10 +37,9 @@ def download_and_process_data(path_to_download_script):
 
 
 class SeagullDataset(Dataset):
-    def __init__(self, path, transformations):
+    def __init__(self, path):
         self.filenames = []
         self.root = path
-        self.transforms = transformations
         for (_, _, files) in os.walk(path):
             for file in files:
                 # TODO: Проверять, чтобы картинка была более 512x512 px
@@ -52,18 +52,6 @@ class SeagullDataset(Dataset):
     def __getitem__(self, idx):
         filename = self.filenames[idx]
         image = Image.open(self.root + filename)
-
-        # Y_transformed = self.transforms(image)
-        # resizing_options = [transforms.InterpolationMode.NEAREST,
-        #                     transforms.InterpolationMode.NEAREST_EXACT,
-        #                     transforms.InterpolationMode.BILINEAR,
-        #                     transforms.InterpolationMode.BICUBIC]
-        #
-        # X_transformed = transforms.functional.resize(img=Y_transformed,
-        #                                              size=Y_transformed.shape[1] // 2,
-        #                                              interpolation=random.choice(resizing_options))
-        #
-        # return X_transformed, Y_transformed
 
         image_width = image.size[0]
         image_height = image.size[1]
