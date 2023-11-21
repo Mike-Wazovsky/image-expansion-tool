@@ -7,7 +7,7 @@ import subprocess
 
 
 def init_logger(cfg: DictConfig, login_id, experiment_notes=None):
-    subprocess.run(["wandb", "login --relogin", str(login_id)])
+    subprocess.run(["wandb", "--relogin", "login", str(login_id)])
     wandb.init(project="image-expansion-tool",
                name="Exp {}".format(str(int(datetime.utcnow().timestamp()))[2:]),
                notes=experiment_notes if experiment_notes is not None else str(cfg),
