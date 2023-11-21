@@ -82,10 +82,10 @@ class UpscalerModule(pl.LightningModule):
         self.metrics_values_valid = []
 
 
-def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000,
+def train_model(model_version, train_loader, valid_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000,
                 log_every_n_steps=5):
     model = UpscalerModule(model_version, loss, lr)
 
     trainer = pl.Trainer(accelerator=accelerator, devices=devices, max_epochs=max_epochs,
                          log_every_n_steps=log_every_n_steps, default_root_dir="./models/")
-    trainer.fit(model=model, train_dataloaders=train_loader)
+    trainer.fit(model=model, train_dataloaders=train_loader, val_dataloaders=valid_loader)

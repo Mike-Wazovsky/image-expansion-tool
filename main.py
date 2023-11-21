@@ -57,9 +57,9 @@ def main(cfg: DictConfig):
 
     init_logger(cfg, os.environ["wandb_login"], cfg.learning.get("notes", None))
 
-    train_model(model_version=model_version, train_loader=train_loader, loss=loss, lr=cfg.learning.lr,
-                optimizer_type=optimizer_type, accelerator=accelerator,
-                devices=devices, max_epochs=cfg.learning.epoch_amount, log_every_n_steps=cfg.learning.log_every_n_steps)
+    train_model(model_version=model_version, train_loader=train_loader, valid_loader=valid_loader, loss=loss,
+                lr=cfg.learning.lr, optimizer_type=optimizer_type, accelerator=accelerator, devices=devices,
+                max_epochs=cfg.learning.epoch_amount, log_every_n_steps=cfg.learning.log_every_n_steps)
 
     finish_logger()
 
