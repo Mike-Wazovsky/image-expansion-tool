@@ -15,7 +15,7 @@ from src.models.train_model import train_model
 from src.models.upscaler_v1 import UpscalerV1
 from src.models.upscaler_v2 import UpscalerV2
 
-from src import init_logger, finish_logger
+from src.utils import init_logger, finish_logger
 
 
 @hydra.main(version_base=None, config_path=".", config_name="config")
