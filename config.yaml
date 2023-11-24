@@ -5,7 +5,7 @@ dataset:
   version: seagull_dataset # Dataset version options: seagull_dataset
 
 learning:
-  epoch_amount: 200
+  epoch_amount: 500
   batch_size: 16
   loss: mse # Loss options: mse
   lr: 0.005
