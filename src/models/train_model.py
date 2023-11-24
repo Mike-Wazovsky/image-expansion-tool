@@ -60,7 +60,7 @@ class UpscalerModule(pl.LightningModule):
         x, y = batch
         y_ = self.model(x)
 
-        metric_value = self.lpips(y / 255, y_)
+        metric_value = self.lpips(y, y_)
         self.metrics_values_valid.append(metric_value.item())
 
     def configure_optimizers(self):
