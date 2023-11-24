@@ -4,6 +4,10 @@ import torch
 from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 from datetime import datetime
 
+import wandb
+
+import numpy as np
+
 common_dict_counter = {}
 
 
@@ -32,6 +36,10 @@ class UpscalerModule(pl.LightningModule):
         self.loss = loss
         self.lr = lr
 
+        self.loss_values_train = []
+        self.metrics_values_train = []
+        self.metrics_values_valid = []
+
     def forward(self, x):
         logits = self.model(x)
         return logits
@@ -43,8 +51,8 @@ class UpscalerModule(pl.LightningModule):
         loss_value = self.loss(y / 255, y_)
         metric_value = self.lpips(y_, y / 255)
 
-        self.log("train_loss", loss_value, on_epoch=True)
-        self.log("train_metric", metric_value, on_epoch=True)
+        self.loss_values_train.append(loss_value.item())
+        self.metrics_values_train.append(metric_value.item())
 
         return loss_value
 
@@ -53,7 +61,7 @@ class UpscalerModule(pl.LightningModule):
         y_ = self.model(x)
 
         metric_value = self.lpips(y / 255, y_)
-        self.log("valid_metric", metric_value, on_epoch=True)
+        self.metrics_values_valid.append(metric_value.item())
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
@@ -61,12 +69,23 @@ class UpscalerModule(pl.LightningModule):
 
     def on_train_epoch_end(self):
         save_model(self.current_epoch, self.model, None)
+        wandb.log({
+            "loss": np.array(self.loss_values_train).mean(),
+            "metrics": {
+                "train": np.array(self.metrics_values_train).mean(),
+                "valid": np.array(self.metrics_values_valid).mean(),
+            }
+        })
+
+        self.loss_values_train = []
+        self.metrics_values_train = []
+        self.metrics_values_valid = []
 
 
-def train_model(model_version, train_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000,
+def train_model(model_version, train_loader, valid_loader, loss, optimizer_type, accelerator, devices, lr=0.005, max_epochs=1000,
                 log_every_n_steps=5):
     model = UpscalerModule(model_version, loss, lr)
 
     trainer = pl.Trainer(accelerator=accelerator, devices=devices, max_epochs=max_epochs,
                          log_every_n_steps=log_every_n_steps, default_root_dir="./models/")
-    trainer.fit(model=model, train_dataloaders=train_loader)
+    trainer.fit(model=model, train_dataloaders=train_loader, val_dataloaders=valid_loader)
