@@ -48,8 +48,8 @@ class UpscalerModule(pl.LightningModule):
         x, y = batch
         y_ = self.model(x)
 
-        loss_value = self.loss(y / 255, y_)
-        metric_value = self.lpips(y_, y / 255)
+        loss_value = self.loss(y, y_)
+        metric_value = self.lpips(y, y_)
 
         self.loss_values_train.append(loss_value.item())
         self.metrics_values_train.append(metric_value.item())
