@@ -2,6 +2,7 @@ from omegaconf import DictConfig
 from torch import nn
 import hydra
 import torch
+import os
 
 from src.data import get_dataloaders
 from src.data import download_and_process_data
@@ -13,6 +14,8 @@ from src.models.train_model import train_model
 
 from src.models.upscaler_v1 import UpscalerV1
 from src.models.upscaler_v2 import UpscalerV2
+
+from src.utils import init_logger, finish_logger
 
 
 @hydra.main(version_base=None, config_path=".", config_name="config")
@@ -27,9 +30,9 @@ def main(cfg: DictConfig):
     if cfg.dataset.version == "seagull_dataset":
         download_and_process_data("./src/data/download_seagull_data.sh")
 
-        train_dataset = SeagullDataset("./data/processed/train/train/images/")
-        val_dataset = SeagullDataset("./data/processed/train/valid/images/")
-        test_dataset = SeagullDataset("./data/processed/test/images/")
+        train_dataset = SeagullDataset("./data/processed/train/train/images/", transformations=data_transforms)
+        val_dataset = SeagullDataset("./data/processed/train/valid/images/", transformations=data_transforms)
+        test_dataset = SeagullDataset("./data/processed/test/images/", transformations=data_transforms)
     else:
         raise Exception("No correct value for dataset.version in config is declared")
 
@@ -52,9 +55,13 @@ def main(cfg: DictConfig):
                                                               test_dataset=test_dataset,
                                                               batch_size=cfg.learning.batch_size)
 
-    train_model(model_version=model_version, train_loader=train_loader, loss=loss, lr=cfg.learning.lr,
-                optimizer_type=optimizer_type, accelerator=accelerator,
-                devices=devices, max_epochs=cfg.learning.epoch_amount, log_every_n_steps=cfg.learning.log_every_n_steps)
+    init_logger(cfg, os.environ["wandb_login"], cfg.learning.get("notes", None))
+
+    train_model(model_version=model_version, train_loader=train_loader, valid_loader=valid_loader, loss=loss,
+                lr=cfg.learning.lr, optimizer_type=optimizer_type, accelerator=accelerator, devices=devices,
+                max_epochs=cfg.learning.epoch_amount, log_every_n_steps=cfg.learning.log_every_n_steps)
+
+    finish_logger()
 
 
 if __name__ == "__main__":
