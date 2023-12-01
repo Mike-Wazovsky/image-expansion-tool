@@ -3,7 +3,7 @@ model:
   checkpoint: ./models/model_best_v2.ckpt # Only if custom path is below
 
 dataset:
-  version: seagull_dataset # Dataset version options: seagull_dataset
+  version: photos_dataset # Dataset version options: seagull_dataset
 
 learning:
   epoch_amount: 500
