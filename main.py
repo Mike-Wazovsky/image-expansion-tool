@@ -25,7 +25,10 @@ def main(cfg: DictConfig):
     elif cfg.model.version == "upscaler_v2":
         model_version = UpscalerV2()
     else:
-        raise Exception("No correct value for model.version in config is declared")
+        try:
+            model_version = torch.load(cfg.model.version)
+        except:
+            raise Exception("No correct value for model.version in config is declared")
 
     if cfg.dataset.version == "seagull_dataset":
         download_and_process_data("./src/data/download_seagull_data.sh")

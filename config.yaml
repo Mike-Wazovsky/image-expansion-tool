@@ -1,5 +1,5 @@
 model:
-  version: upscaler_v2 # Model version options: upscaler_v1, upscaler_v2
+  version: ./models/model_best_v2.h5 # Model version options: upscaler_v1, upscaler_v2 or custom_path to model
 
 dataset:
   version: seagull_dataset # Dataset version options: seagull_dataset
@@ -9,7 +9,6 @@ learning:
   batch_size: 16
   loss: mse # Loss options: mse
   lr: 0.005
-  scheduler: None # Scheduler options: TODO
   optimizer_type: Adam # Optimizer type options: Adam, SGD
   log_every_n_steps: 5
   # notes: Baseline experiment # Notes for current experiment
