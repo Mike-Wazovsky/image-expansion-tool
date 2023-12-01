@@ -27,6 +27,9 @@ def main(cfg: DictConfig):
     else:
         try:
             model_version = torch.load(cfg.model.version)
+            checkpoint = torch.load(cfg.model.checkpoint)
+
+            model_version.load_state_dict(checkpoint['model_state_dict'])
         except:
             raise Exception("No correct value for model.version in config is declared")
 
