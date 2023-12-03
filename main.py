@@ -44,7 +44,7 @@ def main(cfg: DictConfig):
 
         train_dataset = SeagullDataset("./data/photos_dataset/train/", transformations=data_transforms)
         val_dataset = SeagullDataset("./data/photos_dataset/valid/", transformations=data_transforms)
-        test_dataset = SeagullDataset("./data/photos_dataset/valid", transformations=data_transforms)
+        test_dataset = SeagullDataset("./data/photos_dataset/valid/", transformations=data_transforms)
     else:
         raise Exception("No correct value for dataset.version in config is declared")
 
