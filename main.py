@@ -42,9 +42,9 @@ def main(cfg: DictConfig):
     elif cfg.dataset.version == "photos_dataset":
         download_and_process_data("./src/data/download_photos_data.sh")
 
-        train_dataset = SeagullDataset("./data/photos_dataset/train/", transformations=data_transforms)
-        val_dataset = SeagullDataset("./data/photos_dataset/valid/", transformations=data_transforms)
-        test_dataset = SeagullDataset("./data/photos_dataset/valid/", transformations=data_transforms)
+        train_dataset = SeagullDataset("./data/processed/photos_dataset/train/", transformations=data_transforms)
+        val_dataset = SeagullDataset("./data/processed/photos_dataset/valid/", transformations=data_transforms)
+        test_dataset = SeagullDataset("./data/processed/photos_dataset/valid/", transformations=data_transforms)
     else:
         raise Exception("No correct value for dataset.version in config is declared")
 
