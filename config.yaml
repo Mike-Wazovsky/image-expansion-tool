@@ -1,6 +1,6 @@
 model:
-  version: ./models/model_best_v2.h5 # Model version options: upscaler_v1, upscaler_v2 or custom_path to model
-  checkpoint: ./models/model_best_v2.ckpt # Only if custom path is below
+  version: ./models/model_best_v3.h5 # Model version options: upscaler_v1, upscaler_v2 or custom_path to model
+  checkpoint: ./models/model_best_v3.ckpt # Only if custom path is below
 
 dataset:
   version: photos_dataset # Dataset version options: seagull_dataset
