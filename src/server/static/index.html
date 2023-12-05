@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+    <form action="/predict" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" id="imageUpload" onchange="previewImage(event)">
+        <br><br>
+        <img id="imagePreview" width="200" style="display:none;">
+        <br><br>
+        <input type="submit" value="Predict">
+        <br><br>
+        <textarea name="result" id="result" cols="30" rows="10"></textarea>
+    </form>
+
+    <script>
+        function previewImage(event) {
+            var imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = URL.createObjectURL(event.target.files[0]);
+            imagePreview.style.display = "block";
+        }
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', '/predict');
+          xhr.setRequestHeader('X-Api-Token', xhr.getResponseHeader('X-Api-Token'));
+          xhr.send(new FormData(form));
+          xhr.onload = () => {
+            if (xhr.status === 200) {
+              document.getElementById('result').value = xhr.responseText;
+            }
+          };
+        });
+    </script>
+</body>
+</html>
