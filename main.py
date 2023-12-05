@@ -25,7 +25,13 @@ def main(cfg: DictConfig):
     elif cfg.model.version == "upscaler_v2":
         model_version = UpscalerV2()
     else:
-        raise Exception("No correct value for model.version in config is declared")
+        try:
+            model_version = torch.load(cfg.model.version)
+            checkpoint = torch.load(cfg.model.checkpoint)
+
+            model_version.load_state_dict(checkpoint['model_state_dict'])
+        except:
+            raise Exception("No correct value for model.version in config is declared")
 
     if cfg.dataset.version == "seagull_dataset":
         download_and_process_data("./src/data/download_seagull_data.sh")
@@ -33,6 +39,12 @@ def main(cfg: DictConfig):
         train_dataset = SeagullDataset("./data/processed/train/train/images/", transformations=data_transforms)
         val_dataset = SeagullDataset("./data/processed/train/valid/images/", transformations=data_transforms)
         test_dataset = SeagullDataset("./data/processed/test/images/", transformations=data_transforms)
+    elif cfg.dataset.version == "photos_dataset":
+        download_and_process_data("./src/data/download_photos_data.sh")
+
+        train_dataset = SeagullDataset("./data/processed/photos_dataset/train/", transformations=data_transforms)
+        val_dataset = SeagullDataset("./data/processed/photos_dataset/valid/", transformations=data_transforms)
+        test_dataset = SeagullDataset("./data/processed/photos_dataset/valid/", transformations=data_transforms)
     else:
         raise Exception("No correct value for dataset.version in config is declared")
 

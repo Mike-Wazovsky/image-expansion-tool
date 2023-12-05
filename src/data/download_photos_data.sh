@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wget "https://downloader.disk.yandex.ru/disk/6d3dfcaedc1d9273de820225ec2b8ffad2d44a5da9894d89b5c60801c2165eff/656df45e/fKqInKw3d7bLFOeFnMGnhL2a08YRokSlLDDw_HKsQK31k6V5QRY2kITtk2cEyA3FthVeqShYx3019aLjs3Islh2iB7SZUl6talUBIF7H532r8npumZHI4midPdWhecNq?uid=0&filename=photos_dataset.zip&disposition=attachment&hash=lX/xhnONNeGxpzQkEb0I0J6icCXNW8mCzM/d283zN3CgYkGePIGjqHImxAvJzQbZDqZvSgIch5AN9ddz7ydViQ%3D%3D&limit=0&content_type=application%2Fzip&owner_uid=1130000057845466&fsize=7557031965&hid=1c42a98b30cba4fd42bb354b51cfc622&media_type=compressed&tknv=v2" -O data/raw/dataset.zip
