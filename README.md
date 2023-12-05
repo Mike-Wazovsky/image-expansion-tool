@@ -46,8 +46,9 @@ Project Organization
     │   │   ├── predict_model.py
     │   │   └── train_model.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │   ├── visualization  <- Scripts to create exploratory and results oriented visualizations
+    │   │   └── visualize.py
+    │   └── server         <- Server 
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
@@ -60,6 +61,7 @@ Project Organization
 ## Run local server
 
 ``` bash
+cd src/server
 cp .env.example .env
 python app.py
 ```
@@ -67,12 +69,13 @@ python app.py
 ## Run client
 
 ``` bash
-python client.py
+python src/server/client.py
 ```
 
 ## Run production server
 
 ``` bash
+cd src/server
 zip -r model2prod.zip . -x venv\* -x .git\* -x .idea\* -x __pycache__\*
 scp model2prod.zip user@server:projects/model2prod.zip
 ssh user@server
@@ -84,5 +87,18 @@ source venv/bin/activate
 pip install -r requirements.txt
 waitress-serve --port=12023 app:app
 ```
+## Upload your model
+
+Add your model.ckpt and model.h5 files to package models 
+Change the links on your files in the model.py at server package
+
+## Browser extension
+
+To install browser extension take browser_extension package
+
+Go to 'browser://extensions/' and use load unpacked
+
+## Docker
+
 
 
